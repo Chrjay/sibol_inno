@@ -1,5 +1,4 @@
-import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
+import { useFirebaseAuth } from "@/contexts/FirebaseAuthContext";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
@@ -22,7 +21,7 @@ const navItems = [
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, signInWithGoogle } = useFirebaseAuth();
   const [location, navigate] = useLocation();
   const { data: profile, isLoading: profileLoading } = trpc.profile.get.useQuery(
     undefined,
@@ -31,7 +30,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      navigate(getLoginUrl());
+      navigate("/");
       return;
     }
     // Redirect to onboarding if authenticated but profile not complete

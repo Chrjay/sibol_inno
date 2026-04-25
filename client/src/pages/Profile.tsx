@@ -1,5 +1,5 @@
 import { trpc } from "@/lib/trpc";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useFirebaseAuth } from "@/contexts/FirebaseAuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -33,7 +33,7 @@ const GOAL_LABELS: Record<string, string> = {
 };
 
 export default function Profile() {
-  const { user, logout } = useAuth();
+  const { user, logout } = useFirebaseAuth();
   const utils = trpc.useUtils();
   const [editing, setEditing] = useState(false);
 
@@ -85,7 +85,7 @@ export default function Profile() {
           <User className="w-7 h-7 text-white" />
         </div>
         <div className="relative">
-          <h2 className="font-serif font-bold text-lg text-white">{user?.name || "Sibol User"}</h2>
+          <h2 className="font-serif font-bold text-lg text-white">{user?.displayName || "Sibol User"}</h2>
           <p className="text-white/80 text-sm">{user?.email || ""}</p>
           {profile?.onboardingComplete && (
             <div className="flex items-center gap-1 mt-1">

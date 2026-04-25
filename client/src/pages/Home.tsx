@@ -1,9 +1,9 @@
-import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
+import { useFirebaseAuth } from "@/contexts/FirebaseAuthContext";
 import { Button } from "@/components/ui/button";
-import { Sprout, ArrowRight, CheckCircle2, MapPin, MessageCircle, TrendingUp } from "lucide-react";
+import { Sprout, ArrowRight, MapPin, MessageCircle, TrendingUp, Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
+import { toast } from "sonner";
 
 const features = [
   {
@@ -37,7 +37,7 @@ const steps = [
 ];
 
 export default function Home() {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, signInWithGoogle } = useFirebaseAuth();
   const [, navigate] = useLocation();
 
   useEffect(() => {
@@ -45,6 +45,16 @@ export default function Home() {
       navigate("/dashboard");
     }
   }, [loading, isAuthenticated, navigate]);
+
+  const handleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (err: any) {
+      if (err?.code !== "auth/popup-closed-by-user") {
+        toast.error("Sign-in failed. Please try again.");
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -57,9 +67,9 @@ export default function Home() {
           </div>
           <span className="font-serif font-bold text-xl" style={{ color: "oklch(0.52 0.16 145)" }}>Sibol</span>
         </div>
-        <a href={getLoginUrl()} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+        <button onClick={handleSignIn} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
           Sign in
-        </a>
+        </button>
       </header>
 
       {/* Hero */}
@@ -70,7 +80,6 @@ export default function Home() {
             style={{ background: "linear-gradient(135deg, oklch(0.88 0.08 145), oklch(0.93 0.05 165))" }}>
             <Sprout className="w-10 h-10" style={{ color: "oklch(0.52 0.16 145)" }} />
           </div>
-          {/* Thin decorative rings */}
           <div className="absolute inset-0 rounded-full border border-dashed opacity-30 scale-125"
             style={{ borderColor: "oklch(0.52 0.16 145)" }} />
           <div className="absolute inset-0 rounded-full border opacity-15 scale-150"
@@ -90,21 +99,29 @@ export default function Home() {
           Sibol guides 4Ps beneficiaries and underserved Filipinos from welfare dependency to a stable, dignified livelihood — one step at a time.
         </p>
 
-        {/* Decorative horizontal line */}
         <div className="flex items-center gap-3 mb-8 w-full max-w-xs">
           <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, transparent, oklch(0.52 0.16 145 / 0.3))" }} />
           <Sprout className="w-3 h-3" style={{ color: "oklch(0.52 0.16 145 / 0.5)" }} />
           <div className="flex-1 h-px" style={{ background: "linear-gradient(to left, transparent, oklch(0.52 0.16 145 / 0.3))" }} />
         </div>
 
-        <a href={getLoginUrl()} className="w-full max-w-xs">
-          <Button size="lg" className="w-full h-14 text-base font-semibold rounded-2xl shadow-lg"
-            style={{ background: "oklch(0.52 0.16 145)", color: "white" }}>
-            Simulan ang Iyong Landas
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
-        </a>
-        <p className="text-xs text-muted-foreground mt-3">Start Your Pathway — Free</p>
+        <Button
+          size="lg"
+          className="w-full max-w-xs h-14 text-base font-semibold rounded-2xl shadow-lg"
+          style={{ background: "oklch(0.52 0.16 145)", color: "white" }}
+          onClick={handleSignIn}
+          disabled={loading}
+        >
+          {loading ? (
+            <Loader2 className="w-5 h-5 animate-spin mr-2" />
+          ) : (
+            <>
+              Simulan ang Iyong Landas
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </>
+          )}
+        </Button>
+        <p className="text-xs text-muted-foreground mt-3">Start Your Pathway — Sign in with Google, Free</p>
       </section>
 
       {/* How it works */}
@@ -118,12 +135,12 @@ export default function Home() {
         <div className="space-y-3 max-w-sm mx-auto">
           {steps.map((step, i) => (
             <div key={i} className="flex items-start gap-3 p-3 rounded-xl"
-              style={{ background: "oklch(0.97 0.01 165 / 0.6)" }}>
-              <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                style={{ background: "oklch(0.52 0.16 145)", color: "white", fontSize: "11px", fontWeight: 600 }}>
+              style={{ background: "oklch(0.97 0.01 280 / 0.8)" }}>
+              <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold"
+                style={{ background: "oklch(0.52 0.16 145)" }}>
                 {i + 1}
               </div>
-              <p className="text-sm text-foreground leading-snug">{step}</p>
+              <p className="text-sm text-foreground leading-relaxed">{step}</p>
             </div>
           ))}
         </div>
@@ -135,68 +152,46 @@ export default function Home() {
           Mga Tampok
         </p>
         <h2 className="font-serif text-2xl font-semibold text-center mb-6" style={{ color: "oklch(0.28 0.04 280)" }}>
-          Everything You Need
+          Key Features
         </h2>
-        <div className="space-y-4 max-w-sm mx-auto">
+        <div className="space-y-3 max-w-sm mx-auto">
           {features.map(({ icon: Icon, title, desc, color, bg }) => (
-            <div key={title} className="flex items-start gap-4 p-4 rounded-2xl relative overflow-hidden"
-              style={{ background: "oklch(0.99 0.005 280 / 0.75)", border: "1px solid oklch(0.9 0.02 280 / 0.6)" }}>
-              {/* Corner bracket decoration */}
-              <div className="absolute top-2 left-2 w-3 h-3 border-t border-l opacity-30" style={{ borderColor: color }} />
-              <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r opacity-30" style={{ borderColor: color }} />
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: bg }}>
+            <div key={title} className="flex items-start gap-4 p-4 rounded-2xl"
+              style={{ background: "oklch(0.98 0.005 280 / 0.8)", border: "1px solid oklch(0.92 0.02 280 / 0.6)" }}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: bg }}>
                 <Icon className="w-5 h-5" style={{ color }} />
               </div>
               <div>
-                <h3 className="font-serif font-semibold text-base mb-1" style={{ color: "oklch(0.28 0.04 280)" }}>{title}</h3>
-                <p className="text-sm text-muted-foreground leading-snug">{desc}</p>
+                <h3 className="font-semibold text-sm mb-1" style={{ color: "oklch(0.28 0.04 280)" }}>{title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Programs preview */}
-      <section className="px-5 py-8" style={{ background: "oklch(0.97 0.01 165 / 0.5)" }}>
-        <h2 className="font-serif text-2xl font-semibold text-center mb-2" style={{ color: "oklch(0.28 0.04 280)" }}>
-          Real Government Programs
-        </h2>
-        <p className="text-sm text-muted-foreground text-center mb-5">
-          Access verified programs from TESDA, DOLE, DSWD, DTI, and more.
-        </p>
-        <div className="flex flex-wrap gap-2 justify-center max-w-sm mx-auto">
-          {["TESDA Training", "SLP Grants", "DOLE TUPAD", "DTI Negosyo", "4Ps", "Microfinance"].map((tag) => (
-            <span key={tag} className="px-3 py-1.5 rounded-full text-xs font-medium"
-              style={{ background: "oklch(0.88 0.08 145 / 0.4)", color: "oklch(0.38 0.14 145)" }}>
-              {tag}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA bottom */}
-      <section className="px-5 py-10 text-center">
+      {/* CTA Footer */}
+      <section className="px-5 py-10 text-center"
+        style={{ background: "linear-gradient(135deg, oklch(0.93 0.05 145 / 0.4), oklch(0.95 0.04 220 / 0.3))" }}>
         <h2 className="font-serif text-2xl font-semibold mb-3" style={{ color: "oklch(0.28 0.04 280)" }}>
-          Handa ka na bang lumago?
+          Handa ka na ba?<br />
+          <span className="text-lg font-normal text-muted-foreground">Are you ready to grow?</span>
         </h2>
-        <p className="text-sm text-muted-foreground mb-6">Ready to grow? Start your journey today.</p>
-        <a href={getLoginUrl()} className="inline-block w-full max-w-xs">
-          <Button size="lg" className="w-full h-14 text-base font-semibold rounded-2xl"
-            style={{ background: "oklch(0.52 0.16 145)", color: "white" }}>
-            Magsimula Na <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
-        </a>
+        <Button
+          size="lg"
+          className="h-12 px-8 text-sm font-semibold rounded-2xl mt-4"
+          style={{ background: "oklch(0.52 0.16 145)", color: "white" }}
+          onClick={handleSignIn}
+          disabled={loading}
+        >
+          Get Started Free
+          <ArrowRight className="w-4 h-4 ml-2" />
+        </Button>
       </section>
 
-      {/* Footer */}
-      <footer className="px-5 py-6 text-center border-t" style={{ borderColor: "oklch(0.9 0.02 280 / 0.5)" }}>
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Sprout className="w-4 h-4" style={{ color: "oklch(0.52 0.16 145)" }} />
-          <span className="font-serif font-semibold" style={{ color: "oklch(0.52 0.16 145)" }}>Sibol</span>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          "Grow beyond cash support" · Filipino: Sumibol · Lumago
-        </p>
+      <footer className="px-5 py-4 text-center border-t" style={{ borderColor: "oklch(0.9 0.02 280 / 0.4)" }}>
+        <p className="text-xs text-muted-foreground">© 2025 Sibol · Grow beyond cash support</p>
       </footer>
     </div>
   );

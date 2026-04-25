@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 export default function Pathway() {
   const utils = trpc.useUtils();
-  const [expandedStep, setExpandedStep] = useState<number | null>(null);
+  const [expandedStep, setExpandedStep] = useState<string | null>(null);
 
   const { data: pathway, isLoading } = trpc.pathway.get.useQuery();
   const generatePathway = trpc.pathway.generate.useMutation({

@@ -47,3 +47,16 @@
 - [x] Loading and error states on all pages
 - [x] 12 Vitest unit tests passing (auth, profile, programs, pathway, chat)
 - [x] Final checkpoint
+
+## Phase 9: Firebase Migration
+- [x] Install firebase and firebase-admin packages
+- [x] Store Firebase config as environment secrets
+- [x] Create Firebase client initialization file
+- [x] Create Firebase Admin SDK initialization (server-side)
+- [x] Replace Manus OAuth login with Firebase Google Sign-In
+- [x] Replace useAuth hook to use Firebase Auth state
+- [x] Replace all Drizzle/MySQL queries with Firestore collections
+- [x] Update tRPC context to verify Firebase ID tokens
+- [x] Update all tRPC procedures (profile, pathway, programs, chat) to use Firestore
+- [x] Seed programs into Firestore
+- [x] Run tests and verify end-to-end flow

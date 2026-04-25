@@ -1,5 +1,5 @@
 import { trpc } from "@/lib/trpc";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useFirebaseAuth } from "@/contexts/FirebaseAuthContext";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Sprout, ArrowRight, CheckCircle2, Clock, Sparkles, BookOpen, Map, MessageCircle } from "lucide-react";
@@ -13,7 +13,7 @@ const quickLinks = [
 ];
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user } = useFirebaseAuth();
   const { data: profile } = trpc.profile.get.useQuery();
   const { data: pathway, isLoading: pathwayLoading } = trpc.pathway.get.useQuery();
   const generatePathway = trpc.pathway.generate.useMutation({
@@ -29,7 +29,7 @@ export default function Dashboard() {
   const totalSteps = pathway?.steps?.length ?? 0;
   const progress = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
 
-  const firstName = user?.name?.split(" ")[0] || "Ka-Sibol";
+  const firstName = user?.displayName?.split(" ")[0] || "Ka-Sibol";
   const greeting = new Date().getHours() < 12 ? "Magandang umaga" : new Date().getHours() < 18 ? "Magandang hapon" : "Magandang gabi";
 
   // Redirect to onboarding if no profile (handled via useEffect in AppLayout)

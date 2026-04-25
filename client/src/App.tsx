@@ -38,7 +38,7 @@ function Router() {
       <Route path="/resources/:id">
         {(params) => (
           <AppLayout>
-            <ResourceDetail id={Number(params.id)} />
+            <ResourceDetail id={params.id ?? ""} />
           </AppLayout>
         )}
       </Route>

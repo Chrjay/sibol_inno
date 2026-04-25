@@ -12,7 +12,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   enterprise: { bg: "oklch(0.88 0.07 165 / 0.3)", text: "oklch(0.38 0.12 165)" },
 };
 
-export default function ResourceDetail({ id }: { id: number }) {
+export default function ResourceDetail({ id }: { id: string }) {
   const [, navigate] = useLocation();
   const { data: program, isLoading } = trpc.programs.getById.useQuery({ id });
 
