@@ -78,3 +78,8 @@
 ## Phase 11: Google Sign-In Fix
 - [x] Switch signInWithGoogle from signInWithPopup to signInWithRedirect (works in iframe/preview)
 - [x] Handle getRedirectResult on app load to complete the sign-in after redirect returns
+
+## Phase 12: Google Auth iframe Fix
+- [ ] Switch back to signInWithPopup for Google Sign-In (redirect fails in iframe)
+- [ ] Add "Open in new tab" hint on login page for users in preview/iframe context
+- [ ] Ensure popup works correctly when app is opened directly (not in iframe)

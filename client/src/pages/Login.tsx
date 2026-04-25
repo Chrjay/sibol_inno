@@ -19,11 +19,19 @@ export default function Login() {
   const [submitting, setSubmitting] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
+  // Detect if running inside an iframe (Manus preview panel)
+  const isInIframe = window.self !== window.top;
+
   const handleGoogleSignIn = async () => {
+    if (isInIframe) {
+      // Open the app directly in a new tab so the Google popup can work
+      window.open(window.location.href, "_blank");
+      return;
+    }
     setGoogleLoading(true);
     try {
-      // signInWithRedirect navigates away — no need to call navigate() after
       await signInWithGoogle();
+      navigate("/dashboard");
     } catch (err) {
       const msg = getAuthErrorMessage(err as AuthError);
       if (msg) toast.error(msg);
@@ -78,6 +86,18 @@ export default function Login() {
           </h2>
           <p className="text-sm text-muted-foreground mb-6">Welcome back — sign in to continue</p>
 
+          {/* iframe notice — shown only in Manus preview panel */}
+          {isInIframe && (
+            <div className="mb-4 px-3 py-2 rounded-xl text-xs text-center"
+              style={{ background: "oklch(0.96 0.04 145 / 0.3)", color: "oklch(0.40 0.12 145)", border: "1px solid oklch(0.88 0.06 145 / 0.4)" }}>
+              To use Google Sign-In, please{" "}
+              <a href={window.location.href} target="_blank" rel="noopener noreferrer"
+                className="font-semibold underline underline-offset-2">
+                open the app in a new tab ↗
+              </a>
+            </div>
+          )}
+
           {/* Google Sign-In */}
           <Button
             type="button"
@@ -98,7 +118,7 @@ export default function Login() {
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
             )}
-            {googleLoading ? "Redirecting to Google..." : "Continue with Google"}
+            {isInIframe ? "Open in New Tab to Sign In with Google ↗" : googleLoading ? "Signing in..." : "Continue with Google"}
           </Button>
 
           {/* Divider */}
