@@ -5,31 +5,68 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
+import Onboarding from "./pages/Onboarding";
+import Dashboard from "./pages/Dashboard";
+import Pathway from "./pages/Pathway";
+import Resources from "./pages/Resources";
+import ResourceDetail from "./pages/ResourceDetail";
+import Chat from "./pages/Chat";
+import MapExplore from "./pages/MapExplore";
+import Profile from "./pages/Profile";
+import AppLayout from "./components/AppLayout";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
+      <Route path="/" component={Home} />
+      <Route path="/onboarding" component={Onboarding} />
+      <Route path="/dashboard">
+        <AppLayout>
+          <Dashboard />
+        </AppLayout>
+      </Route>
+      <Route path="/pathway">
+        <AppLayout>
+          <Pathway />
+        </AppLayout>
+      </Route>
+      <Route path="/resources">
+        <AppLayout>
+          <Resources />
+        </AppLayout>
+      </Route>
+      <Route path="/resources/:id">
+        {(params) => (
+          <AppLayout>
+            <ResourceDetail id={Number(params.id)} />
+          </AppLayout>
+        )}
+      </Route>
+      <Route path="/map">
+        <AppLayout>
+          <MapExplore />
+        </AppLayout>
+      </Route>
+      <Route path="/chat">
+        <AppLayout>
+          <Chat />
+        </AppLayout>
+      </Route>
+      <Route path="/profile">
+        <AppLayout>
+          <Profile />
+        </AppLayout>
+      </Route>
+      <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
           <Router />

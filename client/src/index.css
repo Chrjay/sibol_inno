@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -40,42 +41,48 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  /* Sibol brand: green primary */
+  --primary: oklch(0.52 0.16 145);
+  --primary-foreground: oklch(0.99 0.005 145);
+  --sidebar-primary: oklch(0.52 0.16 145);
+  --sidebar-primary-foreground: oklch(0.99 0.005 145);
+  --chart-1: oklch(0.52 0.16 145);
+  --chart-2: oklch(0.65 0.12 165);
+  --chart-3: oklch(0.75 0.08 280);
+  --chart-4: oklch(0.80 0.06 340);
+  --chart-5: oklch(0.38 0.14 145);
+  --radius: 0.75rem;
+  /* Dreamy pastel background */
+  --background: oklch(0.985 0.008 280);
+  --foreground: oklch(0.28 0.04 280);
+  --card: oklch(0.99 0.005 280);
+  --card-foreground: oklch(0.28 0.04 280);
+  --popover: oklch(0.99 0.005 280);
+  --popover-foreground: oklch(0.28 0.04 280);
+  /* Soft lavender secondary */
+  --secondary: oklch(0.92 0.03 280);
+  --secondary-foreground: oklch(0.38 0.06 280);
+  --muted: oklch(0.94 0.015 280);
+  --muted-foreground: oklch(0.55 0.04 280);
+  /* Blush pink accent */
+  --accent: oklch(0.93 0.03 340);
+  --accent-foreground: oklch(0.38 0.06 340);
+  --destructive: oklch(0.55 0.2 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.88 0.02 280);
+  --input: oklch(0.92 0.015 280);
+  --ring: oklch(0.52 0.16 145);
+  --sidebar: oklch(0.98 0.01 165);
+  --sidebar-foreground: oklch(0.28 0.04 280);
+  --sidebar-accent: oklch(0.93 0.05 165);
+  --sidebar-accent-foreground: oklch(0.28 0.04 280);
+  --sidebar-border: oklch(0.88 0.02 280);
+  --sidebar-ring: oklch(0.52 0.16 145);
 }
 
 .dark {
@@ -118,8 +125,24 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    background: linear-gradient(
+      135deg,
+      oklch(0.97 0.015 280) 0%,
+      oklch(0.985 0.01 165) 35%,
+      oklch(0.98 0.018 340) 65%,
+      oklch(0.975 0.012 280) 100%
+    );
+    background-attachment: fixed;
+    min-height: 100vh;
   }
+  h1, h2, h3 {
+    font-family: "Playfair Display", Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: oklch(0.75 0.04 280); border-radius: 2px; }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   [type="button"]:not(:disabled),
