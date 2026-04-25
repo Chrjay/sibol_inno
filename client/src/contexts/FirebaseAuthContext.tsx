@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import {
   onAuthStateChanged,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -36,36 +37,28 @@ const FirebaseAuthContext = createContext<FirebaseAuthContextType>({
   logout: async () => {},
 });
 
-/** Convert Firebase AuthError codes to human-readable messages */
-export function getAuthErrorMessage(error: AuthError): string {
-  switch (error.code) {
-    case "auth/user-not-found":
-    case "auth/wrong-password":
-    case "auth/invalid-credential":
-      return "Invalid email or password. Please try again.";
-    case "auth/email-already-in-use":
-      return "This email is already registered. Please sign in instead.";
-    case "auth/weak-password":
-      return "Password must be at least 6 characters.";
-    case "auth/invalid-email":
-      return "Please enter a valid email address.";
-    case "auth/too-many-requests":
-      return "Too many attempts. Please wait a moment and try again.";
-    case "auth/network-request-failed":
-      return "Network error. Please check your connection.";
-    case "auth/popup-closed-by-user":
-      return "Sign-in popup was closed. Please try again.";
-    case "auth/cancelled-popup-request":
-      return "";
-    default:
-      return "An error occurred. Please try again.";
-  }
-}
-
 export function FirebaseAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [idToken, setIdToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Handle redirect result when returning from Google sign-in
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        // result is null when there's no pending redirect — that's normal
+        if (result?.user) {
+          // onAuthStateChanged will pick up the signed-in user automatically
+          console.log("[Firebase] Redirect sign-in completed for:", result.user.email);
+        }
+      })
+      .catch((error) => {
+        // Only log real errors, not the "no pending redirect" case
+        if (error?.code && error.code !== "auth/no-auth-event") {
+          console.error("[Firebase] Redirect sign-in error:", error.code, error.message);
+        }
+      });
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -95,7 +88,8 @@ export function FirebaseAuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const signInWithGoogle = async () => {
-    await signInWithPopup(auth, googleProvider);
+    // Use redirect instead of popup — works in iframes, preview mode, and all browsers
+    await signInWithRedirect(auth, googleProvider);
   };
 
   const signInWithEmail = async (email: string, password: string) => {

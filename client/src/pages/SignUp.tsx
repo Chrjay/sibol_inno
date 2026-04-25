@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { useFirebaseAuth, getAuthErrorMessage } from "@/contexts/FirebaseAuthContext";
+import { useFirebaseAuth } from "@/contexts/FirebaseAuthContext";
+import { getAuthErrorMessage } from "@/lib/auth-utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sprout, Mail, Lock, User, Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";

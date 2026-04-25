@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useFirebaseAuth, getAuthErrorMessage } from "@/contexts/FirebaseAuthContext";
+import { useFirebaseAuth } from "@/contexts/FirebaseAuthContext";
+import { getAuthErrorMessage } from "@/lib/auth-utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sprout, Mail, Loader2, CheckCircle2, ArrowLeft } from "lucide-react";

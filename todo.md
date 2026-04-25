@@ -74,3 +74,7 @@
 - [x] Update AppLayout to redirect to /login instead of /
 - [x] Update Home landing page CTA to go to /login
 - [x] Run tests and verify auth flows
+
+## Phase 11: Google Sign-In Fix
+- [x] Switch signInWithGoogle from signInWithPopup to signInWithRedirect (works in iframe/preview)
+- [x] Handle getRedirectResult on app load to complete the sign-in after redirect returns
