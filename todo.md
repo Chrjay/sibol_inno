@@ -60,3 +60,17 @@
 - [x] Update all tRPC procedures (profile, pathway, programs, chat) to use Firestore
 - [x] Seed programs into Firestore
 - [x] Run tests and verify end-to-end flow
+
+## Phase 10: Firebase Security Rules + Proper Login System
+- [x] Write Firestore security rules (users can only read/write their own data, programs are public read)
+- [x] Apply security rules via firebase-admin on server startup
+- [x] Add Email/Password sign-in support to FirebaseAuthContext
+- [x] Add sign-up with email/password to FirebaseAuthContext
+- [x] Add password reset (forgot password) flow
+- [x] Build dedicated Login page with Google + Email/Password tabs
+- [x] Build Sign-Up page with name, email, password fields
+- [x] Build Forgot Password page
+- [x] Update App.tsx routes for /login, /signup, /forgot-password
+- [x] Update AppLayout to redirect to /login instead of /
+- [x] Update Home landing page CTA to go to /login
+- [x] Run tests and verify auth flows

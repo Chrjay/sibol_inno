@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import { applyFirestoreSecurityRules } from "../firebase-admin";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
@@ -62,5 +63,8 @@ async function startServer() {
     console.log(`Server running on http://localhost:${port}/`);
   });
 }
+
+// Deploy Firestore security rules on startup (non-blocking)
+applyFirestoreSecurityRules().catch(() => {});
 
 startServer().catch(console.error);

@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper functions ──────────────────────────────────────────────────────
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    // ── Programs (public read, no client writes) ──────────────────────────────
+    match /programs/{programId} {
+      allow read: if true;
+      allow write: if false; // Only server-side (Admin SDK) can write
+    }
+
+    // ── User profiles (private per user) ─────────────────────────────────────
+    match /userProfiles/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // ── Pathways (private per user) ───────────────────────────────────────────
+    match /pathways/{pathwayId} {
+      allow read, write: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ── Pathway steps (private per user, nested under pathway) ───────────────
+    match /pathwaySteps/{stepId} {
+      allow read, write: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ── Chat messages (private per user) ─────────────────────────────────────
+    match /chatMessages/{messageId} {
+      allow read, write: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // ── Deny everything else ──────────────────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

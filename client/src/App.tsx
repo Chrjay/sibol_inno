@@ -14,11 +14,17 @@ import Chat from "./pages/Chat";
 import MapExplore from "./pages/MapExplore";
 import Profile from "./pages/Profile";
 import AppLayout from "./components/AppLayout";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/login" component={Login} />
+      <Route path="/signup" component={SignUp} />
+      <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/onboarding" component={Onboarding} />
       <Route path="/dashboard">
         <AppLayout>

@@ -30,7 +30,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      navigate("/");
+      navigate("/login");
       return;
     }
     // Redirect to onboarding if authenticated but profile not complete

@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Sprout, ArrowRight, MapPin, MessageCircle, TrendingUp, Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { toast } from "sonner";
 
 const features = [
   {
@@ -37,7 +36,7 @@ const steps = [
 ];
 
 export default function Home() {
-  const { isAuthenticated, loading, signInWithGoogle } = useFirebaseAuth();
+  const { isAuthenticated, loading } = useFirebaseAuth();
   const [, navigate] = useLocation();
 
   useEffect(() => {
@@ -46,14 +45,8 @@ export default function Home() {
     }
   }, [loading, isAuthenticated, navigate]);
 
-  const handleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (err: any) {
-      if (err?.code !== "auth/popup-closed-by-user") {
-        toast.error("Sign-in failed. Please try again.");
-      }
-    }
+  const handleSignIn = () => {
+    navigate("/login");
   };
 
   return (
@@ -67,9 +60,9 @@ export default function Home() {
           </div>
           <span className="font-serif font-bold text-xl" style={{ color: "oklch(0.52 0.16 145)" }}>Sibol</span>
         </div>
-        <button onClick={handleSignIn} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+        <a href="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
           Sign in
-        </button>
+        </a>
       </header>
 
       {/* Hero */}
@@ -121,7 +114,7 @@ export default function Home() {
             </>
           )}
         </Button>
-        <p className="text-xs text-muted-foreground mt-3">Start Your Pathway — Sign in with Google, Free</p>
+        <p className="text-xs text-muted-foreground mt-3">Start Your Pathway — Free, No credit card needed</p>
       </section>
 
       {/* How it works */}
